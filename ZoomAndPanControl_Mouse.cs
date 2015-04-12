@@ -135,10 +135,7 @@ namespace ZoomAndPan
                 scale = 0.01;
 
             // Make changes less noticeable than the great leaps it otherwise would be
-            if (ContentScale < ContentScaleNormal)
-                scale /= 5;
-            else if (ContentScale < ContentScaleNormal * 1.25)
-                scale /= 2;
+            scale = AdjustScale(scale);
 
             if (null != ZoomOutScale)
             {
@@ -166,10 +163,7 @@ namespace ZoomAndPan
                 scale = 0.01;
 
             // Make changes less noticeable than the great leaps it otherwise would be
-            if (ContentScale < ContentScaleNormal)
-                scale /= 5;
-            else if (ContentScale < ContentScaleNormal * 1.25)
-                scale /= 2;
+            scale = AdjustScale(scale);
 
             if (null != ZoomInScale)
             {
@@ -201,6 +195,21 @@ namespace ZoomAndPan
         protected virtual void ZoomIn(MouseEventArgs e)
         {
             ZoomIn(e.GetPosition(content));
+        }
+
+        private double AdjustScale(double scale)
+        {
+            double adjust = 1.0;
+            while (ContentScaleNormal < adjust)
+            {
+                scale /= 5;
+                adjust /= 10;
+            }
+            if (ContentScale < ContentScaleNormal)
+                scale /= 5;
+            else if (ContentScale < ContentScaleNormal * 1.25)
+                scale /= 2;
+            return scale;
         }
     }
 }
