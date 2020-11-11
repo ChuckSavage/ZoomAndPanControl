@@ -9,7 +9,7 @@ namespace ZoomAndPan
     /// </summary>
     public partial class ZoomAndPanControl
     {
-        public delegate double DZoomScale(ZoomAndPanControl control);
+        public delegate double DZoomScale(ZoomAndPanControl control, double scale);
         public event DZoomScale ZoomScale;
         public event DZoomScale ZoomInScale;
         public event DZoomScale ZoomOutScale;
@@ -140,17 +140,18 @@ namespace ZoomAndPan
             if (null != ZoomOutScale)
             {
                 var Event = ZoomOutScale;
-                scale = Event(this);
+                scale = Event(this, scale);
             }
             else if (null != ZoomScale)
             {
                 var Event = ZoomScale;
-                scale = Event(this);
+                scale = Event(this, scale);
             }
             if (scale <= 0)
                 throw new ArgumentOutOfRangeException("Scale cannot be zero or less for zooming");
 
-            ZoomAboutPoint(this.ContentScale - scale, contentZoomCenter);
+            //ZoomAboutPoint(this.ContentScale - scale, contentZoomCenter);
+            AnimatedZoomAboutPoint(this.ContentScale - scale, contentZoomCenter);
         }
 
         /// <summary>
@@ -168,17 +169,18 @@ namespace ZoomAndPan
             if (null != ZoomInScale)
             {
                 var Event = ZoomInScale;
-                scale = Event(this);
+                scale = Event(this, scale);
             }
             else if (null != ZoomScale)
             {
                 var Event = ZoomScale;
-                scale = Event(this);
+                scale = Event(this, scale);
             }
             if (scale <= 0)
                 throw new ArgumentOutOfRangeException("Scale cannot be zero or less for zooming");
 
-            ZoomAboutPoint(this.ContentScale + scale, contentZoomCenter);
+            //ZoomAboutPoint(this.ContentScale + scale, contentZoomCenter);
+            AnimatedZoomAboutPoint(this.ContentScale + scale, contentZoomCenter);
         }
 
         /// <summary>
