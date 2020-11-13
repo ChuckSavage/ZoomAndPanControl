@@ -125,19 +125,19 @@ namespace ZoomAndPan
             base.OnMouseWheel(e);
         }
 
+        const double ZoomModifiersAdjust = 5.0;
+
         /// <summary>
         /// Zoom the viewport out, centering on the specified point (in content coordinates).
         /// </summary>
         protected virtual void ZoomOut(Point contentZoomCenter)
         {
-            double scale = ContentScale / 1.5;
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                scale /= 10;
-            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
-                scale *= 10;
+            double scale = AdjustScale(ContentScale);
 
-            // Make changes less noticeable than the great leaps it otherwise would be
-            //scale = AdjustScale(scale);
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+                scale /= ZoomModifiersAdjust;
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                scale *= ZoomModifiersAdjust / 3.0;
 
             if (null != ZoomOutScale)
             {
@@ -161,14 +161,12 @@ namespace ZoomAndPan
         /// </summary>
         protected virtual void ZoomIn(Point contentZoomCenter)
         {
-            double scale = ContentScale;
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                scale /= 10;
-            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
-                scale *= 10;
+            double scale = AdjustScale(ContentScale);
 
-            // Make changes less noticeable than the great leaps it otherwise would be
-            //scale = AdjustScale(scale);
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+                scale /= ZoomModifiersAdjust;
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                scale *= ZoomModifiersAdjust;
 
             if (null != ZoomInScale)
             {
@@ -203,8 +201,16 @@ namespace ZoomAndPan
             ZoomIn(e.GetPosition(content));
         }
 
+        /// <summary>
+        /// Make changes less noticeable than the great leaps it otherwise would be
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         private double AdjustScale(double scale)
         {
+            return scale / 2.0;
+            /* old scaler when input was a constant, not based on size of image
+             * and this would adjust for image size, and it wasn't that great
             double adjust = 1.0;
             while (ContentScaleNormal < adjust)
             {
@@ -216,6 +222,7 @@ namespace ZoomAndPan
             else if (ContentScale < ContentScaleNormal * 1.25)
                 scale /= 2;
             return scale;
+            */
         }
     }
 }
