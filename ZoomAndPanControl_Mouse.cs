@@ -130,12 +130,14 @@ namespace ZoomAndPan
         /// </summary>
         protected virtual void ZoomOut(Point contentZoomCenter)
         {
-            double scale = 0.1;
+            double scale = ContentScale / 1.5;
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                scale = 0.01;
+                scale /= 10;
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                scale *= 10;
 
             // Make changes less noticeable than the great leaps it otherwise would be
-            scale = AdjustScale(scale);
+            //scale = AdjustScale(scale);
 
             if (null != ZoomOutScale)
             {
@@ -159,12 +161,14 @@ namespace ZoomAndPan
         /// </summary>
         protected virtual void ZoomIn(Point contentZoomCenter)
         {
-            double scale = 0.1;
+            double scale = ContentScale;
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                scale = 0.01;
+                scale /= 10;
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                scale *= 10;
 
             // Make changes less noticeable than the great leaps it otherwise would be
-            scale = AdjustScale(scale);
+            //scale = AdjustScale(scale);
 
             if (null != ZoomInScale)
             {
